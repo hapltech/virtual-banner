@@ -33,10 +33,10 @@ export function ControlPanel() {
 
     return (
         <aside
-            className={`w-80 h-full transition-transform duration-300 ${
+            className={`absolute top-0 left-0 z-50 h-full transition-transform duration-300 ${
                 isFullScreen ? "-translate-x-full" : "translate-x-0"
             }`}>
-            <Paper className="h-full p-4 rounded-none border-r">
+            <Paper className="h-full w-80 p-4 rounded-none border-r">
                 <Stack gap="xl">
                     <div>
                         <Text

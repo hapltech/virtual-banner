@@ -9,15 +9,12 @@ export function Banner() {
     const { currentImage, showingMemories } = useBannerCycle(config);
 
     return (
-        <Box
-            className={`relative transition-all duration-300 ${
-                isFullScreen ? "w-screen h-screen" : "flex-1 h-full"
-            }`}>
+        <Box className="flex-1 relative">
             <Image
                 src={currentImage}
                 alt="Banner"
-                className={`w-full h-full object-cover transition-all duration-1000 ${
-                    showingMemories ? "animate-fade-in" : ""
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                    showingMemories ? "opacity-100" : "opacity-100"
                 }`}
             />
         </Box>

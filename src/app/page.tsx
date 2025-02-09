@@ -21,21 +21,19 @@ function Layout({ children }: { children: React.ReactNode }) {
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [toggleFullScreen]);
 
-    return (
-        <div className="relative w-full h-screen overflow-hidden">
-            {children}
-        </div>
-    );
+    return children;
 }
 
 export default function HomePage() {
     return (
         <BannerProvider>
             <Layout>
-                <div className="flex h-full">
-                    <ControlPanel />
-                    <Banner />
-                </div>
+                <main className="fixed inset-0">
+                    <div className="relative w-full h-full flex">
+                        <ControlPanel />
+                        <Banner />
+                    </div>
+                </main>
             </Layout>
         </BannerProvider>
     );
