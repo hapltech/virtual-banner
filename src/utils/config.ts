@@ -5,7 +5,7 @@ export interface BannerConfig {
     cycleDuration: number;
 }
 
-export const bannerConfig: BannerConfig = {
+export const defaultBannerConfig: BannerConfig = {
     bannerImage: "/banners/banner-1.jpg",
     memories: [
         "/memories/memory-1.png",

@@ -1,22 +1,19 @@
 "use client";
 
 import { Box, Image } from "@mantine/core";
-import { BannerConfig } from "@/utils/config";
 import { useBannerCycle } from "@/hooks/use-banner-cycle";
+import { useBanner } from "@/components/banner-context-provider";
 
-interface BannerProps {
-    config: BannerConfig;
-}
-
-export function Banner({ config }: BannerProps) {
+export function Banner() {
+    const { config, isFullScreen } = useBanner();
     const { currentImage, showingMemories } = useBannerCycle(config);
 
     return (
-        <Box className="w-full h-screen relative">
+        <Box className="flex-1 relative">
             <Image
                 src={currentImage}
                 alt="Banner"
-                className={`w-full h-full object-cover transition-opacity duration-1000 ${
+                className={`w-full h-full object-cover transition-all duration-1000 ${
                     showingMemories ? "animate-fade-in" : ""
                 }`}
             />
