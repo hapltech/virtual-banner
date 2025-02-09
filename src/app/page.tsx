@@ -11,10 +11,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && isFullScreen) {
-                toggleFullScreen();
-            }
-            if (e.key === "F11") {
+            if (e.key === "h" && e.altKey) {
                 e.preventDefault();
                 toggleFullScreen();
             }
@@ -22,16 +19,20 @@ function Layout({ children }: { children: React.ReactNode }) {
 
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [isFullScreen, toggleFullScreen]);
+    }, [toggleFullScreen]);
 
-    return children;
+    return (
+        <div className="relative w-full h-screen overflow-hidden">
+            {children}
+        </div>
+    );
 }
 
 export default function HomePage() {
     return (
         <BannerProvider>
             <Layout>
-                <div className="flex h-screen">
+                <div className="flex h-full">
                     <ControlPanel />
                     <Banner />
                 </div>

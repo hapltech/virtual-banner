@@ -9,7 +9,10 @@ export function Banner() {
     const { currentImage, showingMemories } = useBannerCycle(config);
 
     return (
-        <Box className="flex-1 relative">
+        <Box
+            className={`relative transition-all duration-300 ${
+                isFullScreen ? "w-screen h-screen" : "flex-1 h-full"
+            }`}>
             <Image
                 src={currentImage}
                 alt="Banner"

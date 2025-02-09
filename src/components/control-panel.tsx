@@ -1,17 +1,17 @@
 "use client";
 
-import { Trash, ArrowsOut, ArrowsIn } from "@phosphor-icons/react";
+import { Trash, ArrowsOut } from "@phosphor-icons/react";
 import { useBanner } from "@/components/banner-context-provider";
 import {
     Button,
     Stack,
     FileInput,
     Paper,
-    Group,
     Image,
     ActionIcon,
     Slider,
     Text,
+    Tooltip,
 } from "@mantine/core";
 
 export function ControlPanel() {
@@ -27,11 +27,7 @@ export function ControlPanel() {
     const handleFileUpload = (file: File | null) => {
         if (file) {
             const url = URL.createObjectURL(file);
-            if (file.name.includes("banner")) {
-                updateConfig({ bannerImage: url });
-            } else {
-                addMemory(url);
-            }
+            addMemory(url);
         }
     };
 
@@ -42,20 +38,6 @@ export function ControlPanel() {
             }`}>
             <Paper className="h-full p-4 rounded-none border-r">
                 <Stack gap="xl">
-                    <div>
-                        <Text
-                            size="sm"
-                            fw={500}
-                            mb={4}>
-                            Banner Image
-                        </Text>
-                        <FileInput
-                            placeholder="Upload banner"
-                            accept="image/*"
-                            onChange={handleFileUpload}
-                        />
-                    </div>
-
                     <div>
                         <Text
                             size="sm"
@@ -82,13 +64,14 @@ export function ControlPanel() {
                             onChange={(value) =>
                                 updateConfig({ cycleInterval: value * 1000 })
                             }
-                            min={1}
-                            max={300}
+                            min={10}
+                            max={900}
                             label={(value) => `${value}s`}
                             marks={[
-                                { value: 60, label: "1m" },
+                                { value: 10, label: "10s" },
                                 { value: 180, label: "3m" },
-                                { value: 300, label: "5m" },
+                                { value: 600, label: "10m" },
+                                { value: 900, label: "15m" },
                             ]}
                         />
                     </div>
@@ -106,12 +89,13 @@ export function ControlPanel() {
                                 updateConfig({ cycleDuration: value * 1000 })
                             }
                             min={1}
-                            max={30}
+                            max={120}
                             label={(value) => `${value}s`}
                             marks={[
-                                { value: 5, label: "5s" },
-                                { value: 15, label: "15s" },
+                                { value: 5, label: "1s" },
                                 { value: 30, label: "30s" },
+                                { value: 60, label: "1m" },
+                                { value: 120, label: "2m" },
                             ]}
                         />
                     </div>
@@ -145,14 +129,14 @@ export function ControlPanel() {
                         </div>
                     </Stack>
 
-                    <Button
-                        onClick={toggleFullScreen}
-                        fullWidth>
-                        {isFullScreen ? <ArrowsOut /> : <ArrowsIn />}
-                        {isFullScreen
-                            ? "Exit Fullscreen (Esc)"
-                            : "Enter Fullscreen (F11)"}
-                    </Button>
+                    <Tooltip label="Press 'Alt + H' to toggle sidebar">
+                        <Button
+                            onClick={toggleFullScreen}
+                            leftSection={<ArrowsOut />}
+                            fullWidth>
+                            {isFullScreen ? "Show Sidebar" : "Hide Sidebar"}
+                        </Button>
+                    </Tooltip>
                 </Stack>
             </Paper>
         </aside>

@@ -6,7 +6,7 @@ export interface BannerConfig {
 }
 
 export const defaultBannerConfig: BannerConfig = {
-    bannerImage: "/banners/banner-1.jpg",
+    bannerImage: "/banners/banner.jpg",
     memories: [
         "/memories/memory-1.png",
         "/memories/memory-2.jpg",
