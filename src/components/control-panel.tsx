@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash, ArrowsOut } from "@phosphor-icons/react";
+import { Trash, ArrowsOut, UploadSimple } from "@phosphor-icons/react";
 import { useBanner } from "@/components/banner-context-provider";
 import {
     Button,
@@ -24,19 +24,21 @@ export function ControlPanel() {
         removeMemory,
     } = useBanner();
 
-    const handleFileUpload = (file: File | null) => {
-        if (file) {
-            const url = URL.createObjectURL(file);
-            addMemory(url);
+    const handleFileUpload = (files: File[] | null) => {
+        if (files) {
+            files.forEach((file) => {
+                const url = URL.createObjectURL(file);
+                addMemory(url);
+            });
         }
     };
 
     return (
         <aside
-            className={`absolute top-0 left-0 z-50 h-full transition-transform duration-300 ${
-                isFullScreen ? "-translate-x-full" : "translate-x-0"
+            className={`absolute top-0 right-0 z-50 h-full transition-transform duration-300 ${
+                isFullScreen ? "translate-x-full" : "translate-x-0"
             }`}>
-            <Paper className="h-full w-80 p-4 rounded-none border-r">
+            <Paper className="h-full w-80 p-4 rounded-none border-l">
                 <Stack gap="xl">
                     <div>
                         <Text
@@ -46,7 +48,10 @@ export function ControlPanel() {
                             Add Memory
                         </Text>
                         <FileInput
-                            placeholder="Upload memory"
+                            multiple
+                            variant="filled"
+                            leftSection={<UploadSimple size={16} />}
+                            placeholder="Upload memories"
                             accept="image/*"
                             onChange={handleFileUpload}
                         />
@@ -106,7 +111,7 @@ export function ControlPanel() {
                             fw={500}>
                             Memories
                         </Text>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto [&::-webkit-scrollbar]:w-2">
                             {config.memories.map((memory, index) => (
                                 <div
                                     key={index}
