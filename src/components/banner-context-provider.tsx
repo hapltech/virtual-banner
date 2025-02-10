@@ -1,7 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
 import { BannerConfig, defaultBannerConfig } from "@/utils/config";
+import { getPublicImageUrls } from "@/utils/image";
+import {
+    createContext,
+    useContext,
+    useState,
+    useCallback,
+    useEffect,
+} from "react";
 
 interface BannerContextType {
     config: BannerConfig;
@@ -10,6 +17,7 @@ interface BannerContextType {
     toggleFullScreen: () => void;
     addMemory: (imageUrl: string) => void;
     removeMemory: (imageUrl: string) => void;
+    memoriesPerCycle: number;
 }
 
 const BannerContext = createContext<BannerContextType | null>(null);
@@ -17,6 +25,9 @@ const BannerContext = createContext<BannerContextType | null>(null);
 export function BannerProvider({ children }: { children: React.ReactNode }) {
     const [config, setConfig] = useState<BannerConfig>(defaultBannerConfig);
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const [memoriesPerCycle, setMemoriesPerCycle] = useState(
+        defaultBannerConfig.memoriesPerCycle
+    );
 
     const updateConfig = useCallback((newConfig: Partial<BannerConfig>) => {
         setConfig((prev) => ({ ...prev, ...newConfig }));
@@ -40,6 +51,21 @@ export function BannerProvider({ children }: { children: React.ReactNode }) {
         }));
     }, []);
 
+    useEffect(() => {
+        const memoriesDirectory = "/memories";
+
+        const loadImageUrls = async () => {
+            const imageUrls = await getPublicImageUrls(memoriesDirectory);
+
+            setConfig((prev) => ({
+                ...prev,
+                memories: imageUrls,
+            }));
+        };
+
+        loadImageUrls();
+    }, []);
+
     return (
         <BannerContext.Provider
             value={{
@@ -49,6 +75,7 @@ export function BannerProvider({ children }: { children: React.ReactNode }) {
                 toggleFullScreen,
                 addMemory,
                 removeMemory,
+                memoriesPerCycle,
             }}>
             {children}
         </BannerContext.Provider>

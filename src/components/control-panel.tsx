@@ -22,6 +22,7 @@ export function ControlPanel() {
         toggleFullScreen,
         addMemory,
         removeMemory,
+        memoriesPerCycle,
     } = useBanner();
 
     const handleFileUpload = (files: File[] | null) => {
@@ -101,6 +102,29 @@ export function ControlPanel() {
                                 { value: 30, label: "30s" },
                                 { value: 60, label: "1m" },
                                 { value: 120, label: "2m" },
+                            ]}
+                        />
+                    </div>
+
+                    <div>
+                        <Text
+                            size="sm"
+                            fw={500}
+                            mb={4}>
+                            Memories Per Cycle
+                        </Text>
+                        <Slider
+                            value={config.memoriesPerCycle}
+                            onChange={(value) =>
+                                updateConfig({ memoriesPerCycle: value })
+                            }
+                            min={1}
+                            max={config.memories.length}
+                            step={1}
+                            label={(value) => `${value} Images`}
+                            marks={[
+                                { value: 1, label: "1" },
+                                { value: config.memories.length, label: "All" },
                             ]}
                         />
                     </div>

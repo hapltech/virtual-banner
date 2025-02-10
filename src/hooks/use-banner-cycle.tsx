@@ -3,16 +3,25 @@
 import { useState, useEffect } from "react";
 import { BannerConfig } from "@/utils/config";
 
+function getRandomItems<T>(arr: T[], count: number): T[] {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
 export const useBannerCycle = (config: BannerConfig) => {
     const [showingMemories, setShowingMemories] = useState(false);
     const [currentMemoryIndex, setCurrentMemoryIndex] = useState(0);
+    const [currentMemories, setCurrentMemories] = useState<string[]>([]);
 
     useEffect(() => {
-        // Handle memory cycling interval
         const cycleInterval = setInterval(() => {
+            const randomMemories = getRandomItems(
+                config.memories,
+                Math.min(config.memoriesPerCycle, config.memories.length)
+            );
+            setCurrentMemories(randomMemories);
             setShowingMemories(true);
 
-            // Reset after duration
             const durationTimeout = setTimeout(() => {
                 setShowingMemories(false);
                 setCurrentMemoryIndex(0);
@@ -22,27 +31,31 @@ export const useBannerCycle = (config: BannerConfig) => {
         }, config.cycleInterval);
 
         return () => clearInterval(cycleInterval);
-    }, [config.cycleInterval, config.cycleDuration]);
+    }, [
+        config.cycleInterval,
+        config.cycleDuration,
+        config.memories,
+        config.memoriesPerCycle,
+    ]);
 
     useEffect(() => {
-        // Handle memory image rotation
         let rotationInterval: NodeJS.Timeout;
 
         if (showingMemories) {
             rotationInterval = setInterval(() => {
                 setCurrentMemoryIndex((prev) =>
-                    prev === config.memories.length - 1 ? 0 : prev + 1
+                    prev === currentMemories.length - 1 ? 0 : prev + 1
                 );
-            }, 1000); // Rotate every second during memory showing
+            }, 1000);
         }
 
         return () => clearInterval(rotationInterval);
-    }, [showingMemories, config.memories.length]);
+    }, [showingMemories, currentMemories.length]);
 
     return {
         showingMemories,
         currentImage: showingMemories
-            ? config.memories[currentMemoryIndex]
+            ? currentMemories[currentMemoryIndex]
             : config.bannerImage,
     };
 };

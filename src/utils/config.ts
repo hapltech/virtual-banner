@@ -3,15 +3,13 @@ export interface BannerConfig {
     memories: string[];
     cycleInterval: number;
     cycleDuration: number;
+    memoriesPerCycle: number;
 }
 
 export const defaultBannerConfig: BannerConfig = {
-    bannerImage: "/banners/banner.jpg",
-    memories: [
-        "/memories/memory-1.png",
-        "/memories/memory-2.jpg",
-        "/memories/memory-3.jpg",
-    ],
-    cycleInterval: 12000,
-    cycleDuration: 1000,
+    bannerImage: "/banners/banner.webp",
+    memories: [],
+    cycleInterval: 60000,
+    cycleDuration: 10000,
+    memoriesPerCycle: 2,
 };
