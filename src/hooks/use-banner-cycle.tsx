@@ -23,8 +23,10 @@ export const useBannerCycle = (config: BannerConfig) => {
             setShowingMemories(true);
 
             const durationTimeout = setTimeout(() => {
-                setShowingMemories(false);
-                setCurrentMemoryIndex(0);
+                setTimeout(() => {
+                    setShowingMemories(false);
+                    setCurrentMemoryIndex(0);
+                }, 1000);
             }, config.cycleDuration);
 
             return () => clearTimeout(durationTimeout);

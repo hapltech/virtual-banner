@@ -1,7 +1,6 @@
 "use client";
 
 import { BannerConfig, defaultBannerConfig } from "@/utils/config";
-import { getPublicImageUrls } from "@/utils/image";
 import {
     createContext,
     useContext,
@@ -52,18 +51,24 @@ export function BannerProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
-        const memoriesDirectory = "/memories";
-
-        const loadImageUrls = async () => {
-            const imageUrls = await getPublicImageUrls(memoriesDirectory);
-
-            setConfig((prev) => ({
-                ...prev,
-                memories: imageUrls,
-            }));
+        const loadMemories = async () => {
+            try {
+                const response = await fetch("/api/memories");
+                const data = await response.json();
+                if (data.imageUrls) {
+                    setConfig((prev) => ({
+                        ...prev,
+                        memories: data.imageUrls,
+                    }));
+                } else {
+                    console.error("Failed to load images:", data.error);
+                }
+            } catch (error) {
+                console.error("Failed to fetch images:", error);
+            }
         };
 
-        loadImageUrls();
+        loadMemories();
     }, []);
 
     return (
