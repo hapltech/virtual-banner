@@ -13,8 +13,8 @@ export function Banner() {
             <Image
                 src={currentImage}
                 alt="Banner"
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                    showingMemories ? "opacity-100" : "opacity-100"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-150 ${
+                    showingMemories ? "opacity-0" : "opacity-100"
                 }`}
                 style={{ transition: "opacity 1s ease-in-out" }}
             />

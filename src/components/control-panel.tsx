@@ -98,7 +98,7 @@ export function ControlPanel() {
                             max={120}
                             label={(value) => `${value}s`}
                             marks={[
-                                { value: 5, label: "1s" },
+                                { value: 1, label: "1s" },
                                 { value: 30, label: "30s" },
                                 { value: 60, label: "1m" },
                                 { value: 120, label: "2m" },
