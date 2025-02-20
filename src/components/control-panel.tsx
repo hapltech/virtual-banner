@@ -12,7 +12,9 @@ import {
     Slider,
     Text,
     Tooltip,
+    Select,
 } from "@mantine/core";
+import { AnimationType } from "@/utils/config";
 
 export function ControlPanel() {
     const {
@@ -56,6 +58,46 @@ export function ControlPanel() {
                             placeholder="Upload memories"
                             accept="image/*"
                             onChange={handleFileUpload}
+                        />
+                    </div>
+
+                    <div>
+                        <Text
+                            size="sm"
+                            fw={500}
+                            mb={4}>
+                            Animation Type
+                        </Text>
+                        <Select
+                            value={config.animationType}
+                            data={[
+                                { value: AnimationType.FADE, label: "Fade" },
+                                {
+                                    value: AnimationType.SLIDE_LEFT,
+                                    label: "Slide Left",
+                                },
+                                {
+                                    value: AnimationType.SLIDE_RIGHT,
+                                    label: "Slide Right",
+                                },
+                                {
+                                    value: AnimationType.ZOOM_IN,
+                                    label: "Zoom In",
+                                },
+                                {
+                                    value: AnimationType.ZOOM_OUT,
+                                    label: "Zoom Out",
+                                },
+                                {
+                                    value: AnimationType.RANDOM,
+                                    label: "Random",
+                                },
+                            ]}
+                            onChange={(value) =>
+                                updateConfig({
+                                    animationType: value as AnimationType,
+                                })
+                            }
                         />
                     </div>
 
