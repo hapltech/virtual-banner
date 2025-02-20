@@ -6,12 +6,14 @@ interface BannerState {
     config: BannerConfig;
     isFullScreen: boolean;
     memoriesPerCycle: number;
+    showConfetti: boolean;
     updateConfig: (newConfig: Partial<BannerConfig>) => void;
     toggleFullScreen: () => void;
     addMemory: (imageUrl: string) => void;
     removeMemory: (imageUrl: string) => void;
     setMemoriesPerCycle: (memoriesPerCycle: number) => void;
     loadInitialMemories: (initialMemories: string[]) => void;
+    toggleConfetti: () => void;
 }
 
 export const useBannerStore = create<BannerState>()(
@@ -20,6 +22,7 @@ export const useBannerStore = create<BannerState>()(
             config: defaultBannerConfig,
             isFullScreen: false,
             memoriesPerCycle: defaultBannerConfig.memoriesPerCycle,
+            showConfetti: false,
             updateConfig: (newConfig: Partial<BannerConfig>) =>
                 set((state) => ({ config: { ...state.config, ...newConfig } })),
             toggleFullScreen: () =>
@@ -46,6 +49,8 @@ export const useBannerStore = create<BannerState>()(
                 set((state) => ({
                     config: { ...state.config, memories: initialMemories },
                 })),
+            toggleConfetti: () =>
+                set((state) => ({ showConfetti: !state.showConfetti })),
         }),
         {
             name: "banner-storage",

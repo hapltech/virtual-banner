@@ -1,7 +1,13 @@
 "use client";
 
-import { Trash, ArrowsOut, UploadSimple } from "@phosphor-icons/react";
 import { useBannerStore } from "@/store/banner";
+import { AnimationType } from "@/utils/config";
+import {
+    UploadSimple,
+    ArrowsOut,
+    Confetti,
+    Trash,
+} from "@phosphor-icons/react";
 import {
     Button,
     Stack,
@@ -13,8 +19,8 @@ import {
     Text,
     Tooltip,
     Select,
+    Chip,
 } from "@mantine/core";
-import { AnimationType } from "@/utils/config";
 
 export function ControlPanel() {
     const {
@@ -26,6 +32,8 @@ export function ControlPanel() {
         removeMemory,
         memoriesPerCycle,
         setMemoriesPerCycle,
+        showConfetti,
+        toggleConfetti,
     } = useBannerStore();
 
     const handleFileUpload = (files: File[] | null) => {
@@ -61,44 +69,58 @@ export function ControlPanel() {
                         />
                     </div>
 
-                    <div>
-                        <Text
-                            size="sm"
-                            fw={500}
-                            mb={4}>
-                            Animation Type
-                        </Text>
-                        <Select
-                            value={config.animationType}
-                            data={[
-                                { value: AnimationType.FADE, label: "Fade" },
-                                {
-                                    value: AnimationType.SLIDE_LEFT,
-                                    label: "Slide Left",
-                                },
-                                {
-                                    value: AnimationType.SLIDE_RIGHT,
-                                    label: "Slide Right",
-                                },
-                                {
-                                    value: AnimationType.ZOOM_IN,
-                                    label: "Zoom In",
-                                },
-                                {
-                                    value: AnimationType.ZOOM_OUT,
-                                    label: "Zoom Out",
-                                },
-                                {
-                                    value: AnimationType.RANDOM,
-                                    label: "Random",
-                                },
-                            ]}
-                            onChange={(value) =>
-                                updateConfig({
-                                    animationType: value as AnimationType,
-                                })
-                            }
-                        />
+                    <div className="flex gap-4 items-end justify-between">
+                        <div>
+                            <Text
+                                size="sm"
+                                fw={500}
+                                mb={4}>
+                                Animation Type
+                            </Text>
+                            <Select
+                                value={config.animationType}
+                                data={[
+                                    {
+                                        value: AnimationType.FADE,
+                                        label: "Fade",
+                                    },
+                                    {
+                                        value: AnimationType.SLIDE_LEFT,
+                                        label: "Slide Left",
+                                    },
+                                    {
+                                        value: AnimationType.SLIDE_RIGHT,
+                                        label: "Slide Right",
+                                    },
+                                    {
+                                        value: AnimationType.ZOOM_IN,
+                                        label: "Zoom In",
+                                    },
+                                    {
+                                        value: AnimationType.ZOOM_OUT,
+                                        label: "Zoom Out",
+                                    },
+                                    {
+                                        value: AnimationType.RANDOM,
+                                        label: "Random",
+                                    },
+                                ]}
+                                onChange={(value) =>
+                                    updateConfig({
+                                        animationType: value as AnimationType,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <Chip
+                            size="xl"
+                            radius="sm"
+                            checked={showConfetti}
+                            icon={<Confetti size={24} />}
+                            onChange={toggleConfetti}>
+                            Confetti
+                        </Chip>
                     </div>
 
                     <div>
@@ -138,7 +160,7 @@ export function ControlPanel() {
                             onChange={(value) =>
                                 updateConfig({ cycleDuration: value * 1000 })
                             }
-                            min={3} // Minimum duration is now 3 seconds
+                            min={3}
                             max={120}
                             step={1}
                             label={(value) => `${value}s`}
@@ -201,7 +223,7 @@ export function ControlPanel() {
                         </div>
                     </Stack>
 
-                    <Tooltip label="Press 'Alt + H' to toggle sidebar">
+                    <Tooltip label="Press 'H' or 'Space' to toggle sidebar">
                         <Button
                             onClick={toggleFullScreen}
                             leftSection={<ArrowsOut />}

@@ -4,6 +4,7 @@ import { useBannerCycle } from "@/hooks/use-banner-cycle";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBannerStore } from "@/store/banner";
 import { AnimationType } from "@/utils/config";
+import Confetti from "react-confetti";
 import { Box } from "@mantine/core";
 import React from "react";
 
@@ -43,7 +44,7 @@ const getRandomAnimation = () => {
 
 export function Banner() {
     const { currentImage } = useBannerCycle();
-    const { config } = useBannerStore();
+    const { config, showConfetti } = useBannerStore();
 
     const animationToUse =
         config.animationType === AnimationType.RANDOM
@@ -56,6 +57,12 @@ export function Banner() {
 
     return (
         <Box className="flex-1 relative">
+            {showConfetti && (
+                <Confetti
+                    width={window.innerWidth}
+                    height={window.innerHeight}
+                />
+            )}
             <AnimatePresence mode="wait">
                 <motion.img
                     key={currentImage}
