@@ -114,10 +114,10 @@ export function ControlPanel() {
                         </div>
 
                         <Chip
-                            size="xl"
+                            size="lg"
                             radius="sm"
                             checked={showConfetti}
-                            icon={<Confetti size={24} />}
+                            icon={<Confetti size={20} />}
                             onChange={toggleConfetti}>
                             Confetti
                         </Chip>
