@@ -39,10 +39,10 @@ export function ControlPanel() {
 
     return (
         <aside
-            className={`absolute top-0 right-0 z-50 h-full transition-transform duration-300 ${
+            className={`absolute top-0 right-0 z-50 h-screen transition-transform duration-300 ${
                 isFullScreen ? "translate-x-full" : "translate-x-0"
             }`}>
-            <Paper className="h-full w-80 p-4 rounded-none border-l">
+            <Paper className="h-full w-80 p-4 rounded-none border-l overflow-y-auto">
                 <Stack gap="xl">
                     <div>
                         <Text
@@ -106,7 +106,7 @@ export function ControlPanel() {
                             size="sm"
                             fw={500}
                             mb={4}>
-                            Cycle Interval
+                            Cycle Interval (seconds)
                         </Text>
                         <Slider
                             value={config.cycleInterval / 1000}
@@ -115,6 +115,7 @@ export function ControlPanel() {
                             }
                             min={10}
                             max={900}
+                            step={10}
                             label={(value) => `${value}s`}
                             marks={[
                                 { value: 10, label: "10s" },
@@ -130,18 +131,19 @@ export function ControlPanel() {
                             size="sm"
                             fw={500}
                             mb={4}>
-                            Memory Duration
+                            Memory Duration (seconds)
                         </Text>
                         <Slider
                             value={config.cycleDuration / 1000}
                             onChange={(value) =>
                                 updateConfig({ cycleDuration: value * 1000 })
                             }
-                            min={1}
+                            min={3} // Minimum duration is now 3 seconds
                             max={120}
+                            step={1}
                             label={(value) => `${value}s`}
                             marks={[
-                                { value: 1, label: "1s" },
+                                { value: 3, label: "3s" },
                                 { value: 30, label: "30s" },
                                 { value: 60, label: "1m" },
                                 { value: 120, label: "2m" },

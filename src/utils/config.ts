@@ -20,7 +20,7 @@ export const defaultBannerConfig: BannerConfig = {
     bannerImage: "/banners/banner.webp",
     memories: [],
     cycleInterval: 60000,
-    cycleDuration: 10000,
-    memoriesPerCycle: 2,
-    animationType: AnimationType.FADE, // Default animation
+    cycleDuration: 5000,
+    memoriesPerCycle: 3,
+    animationType: AnimationType.FADE,
 };
