@@ -1,11 +1,13 @@
 "use client";
 
-import { BannerProvider } from "@/components/banner-context-provider";
 import { useLoadInitialMemories } from "@/hooks/use-load-memories";
-import { useBanner } from "@/components/banner-context-provider";
 import { ControlPanel } from "@/components/control-panel";
 import { Banner } from "@/components/banner";
 import { useEffect } from "react";
+import {
+    BannerProvider,
+    useBanner,
+} from "@/components/banner-context-provider";
 
 function Layout({ children }: { children: React.ReactNode }) {
     const { isFullScreen, toggleFullScreen } = useBanner();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useBannerStore } from "@/store/banner";
 
 function getRandomItems<T>(arr: T[], count: number): T[] {
@@ -10,55 +10,72 @@ function getRandomItems<T>(arr: T[], count: number): T[] {
 
 export const useBannerCycle = () => {
     const { config, memoriesPerCycle } = useBannerStore();
+    const [currentImage, setCurrentImage] = useState(config.bannerImage);
     const [showingMemories, setShowingMemories] = useState(false);
     const [currentMemoryIndex, setCurrentMemoryIndex] = useState(0);
     const [currentMemories, setCurrentMemories] = useState<string[]>([]);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const memoryIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        const cycleInterval = setInterval(() => {
+        const startCycle = () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            if (memoryIntervalRef.current)
+                clearInterval(memoryIntervalRef.current);
+
             const randomMemories = getRandomItems(
                 config.memories,
                 Math.min(memoriesPerCycle, config.memories.length)
             );
             setCurrentMemories(randomMemories);
-            setShowingMemories(true);
+            setCurrentMemoryIndex(0);
 
-            const durationTimeout = setTimeout(() => {
-                setTimeout(() => {
+            if (randomMemories.length > 0) {
+                setShowingMemories(true);
+                setCurrentImage(randomMemories[0]);
+
+                let memoryIndex = 0;
+                memoryIntervalRef.current = setInterval(() => {
+                    memoryIndex = (memoryIndex + 1) % randomMemories.length;
+                    setCurrentImage(randomMemories[memoryIndex]);
+                }, config.cycleDuration);
+
+                timeoutRef.current = setTimeout(() => {
+                    if (memoryIntervalRef.current)
+                        clearInterval(memoryIntervalRef.current);
                     setShowingMemories(false);
-                    setCurrentMemoryIndex(0);
-                }, 1000);
-            }, config.cycleDuration);
+                    setCurrentImage(config.bannerImage);
+                }, config.cycleDuration * randomMemories.length);
+            } else {
+                setShowingMemories(false);
+                setCurrentImage(config.bannerImage);
+                timeoutRef.current = setTimeout(() => {
+                    setCurrentImage(config.bannerImage);
+                }, config.cycleInterval);
+                return;
+            }
+        };
 
-            return () => clearTimeout(durationTimeout);
-        }, config.cycleInterval);
+        startCycle();
 
-        return () => clearInterval(cycleInterval);
+        const cycleIntervalId = setInterval(startCycle, config.cycleInterval);
+
+        return () => {
+            clearInterval(cycleIntervalId);
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            if (memoryIntervalRef.current)
+                clearInterval(memoryIntervalRef.current);
+        };
     }, [
-        config.cycleInterval,
+        config.bannerImage,
         config.cycleDuration,
+        config.cycleInterval,
         config.memories,
         memoriesPerCycle,
     ]);
 
-    useEffect(() => {
-        let rotationInterval: NodeJS.Timeout;
-
-        if (showingMemories) {
-            rotationInterval = setInterval(() => {
-                setCurrentMemoryIndex((prev) =>
-                    prev === currentMemories.length - 1 ? 0 : prev + 1
-                );
-            }, 1000);
-        }
-
-        return () => clearInterval(rotationInterval);
-    }, [showingMemories, currentMemories.length]);
-
     return {
+        currentImage,
         showingMemories,
-        currentImage: showingMemories
-            ? currentMemories[currentMemoryIndex]
-            : config.bannerImage,
     };
 };
