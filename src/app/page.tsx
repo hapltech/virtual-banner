@@ -1,17 +1,18 @@
 "use client";
 
-import { Banner } from "@/components/banner";
-import { ControlPanel } from "@/components/control-panel";
 import { BannerProvider } from "@/components/banner-context-provider";
-import { useEffect } from "react";
+import { useLoadInitialMemories } from "@/hooks/use-load-memories";
 import { useBanner } from "@/components/banner-context-provider";
+import { ControlPanel } from "@/components/control-panel";
+import { Banner } from "@/components/banner";
+import { useEffect } from "react";
 
 function Layout({ children }: { children: React.ReactNode }) {
     const { isFullScreen, toggleFullScreen } = useBanner();
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "h" && e.altKey) {
+            if (e.key === "h" || e.key === " ") {
                 e.preventDefault();
                 toggleFullScreen();
             }
@@ -25,6 +26,8 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
+    useLoadInitialMemories();
+
     return (
         <BannerProvider>
             <Layout>

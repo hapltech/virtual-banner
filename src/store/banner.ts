@@ -11,6 +11,7 @@ interface BannerState {
     addMemory: (imageUrl: string) => void;
     removeMemory: (imageUrl: string) => void;
     setMemoriesPerCycle: (memoriesPerCycle: number) => void;
+    loadInitialMemories: (initialMemories: string[]) => void;
 }
 
 export const useBannerStore = create<BannerState>()(
@@ -41,10 +42,24 @@ export const useBannerStore = create<BannerState>()(
                 })),
             setMemoriesPerCycle: (memoriesPerCycle: number) =>
                 set({ memoriesPerCycle }),
+            loadInitialMemories: (initialMemories: string[]) =>
+                set((state) => ({
+                    config: { ...state.config, memories: initialMemories },
+                })),
         }),
         {
             name: "banner-storage",
             storage: createJSONStorage(() => localStorage),
+            onRehydrateStorage: () => {
+                return (state, error) => {
+                    if (error) {
+                        console.error(
+                            "An error occurred during rehydration:",
+                            error
+                        );
+                    }
+                };
+            },
         }
     )
 );
