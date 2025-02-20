@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash, ArrowsOut, UploadSimple } from "@phosphor-icons/react";
-import { useBanner } from "@/components/banner-context-provider";
+import { useBannerStore } from "@/store/banner";
 import {
     Button,
     Stack,
@@ -23,7 +23,8 @@ export function ControlPanel() {
         addMemory,
         removeMemory,
         memoriesPerCycle,
-    } = useBanner();
+        setMemoriesPerCycle,
+    } = useBannerStore();
 
     const handleFileUpload = (files: File[] | null) => {
         if (files) {
@@ -114,10 +115,8 @@ export function ControlPanel() {
                             Memories Per Cycle
                         </Text>
                         <Slider
-                            value={config.memoriesPerCycle}
-                            onChange={(value) =>
-                                updateConfig({ memoriesPerCycle: value })
-                            }
+                            value={memoriesPerCycle}
+                            onChange={(value) => setMemoriesPerCycle(value)}
                             min={1}
                             max={config.memories.length}
                             step={1}

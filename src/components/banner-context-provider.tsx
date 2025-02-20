@@ -1,13 +1,8 @@
 "use client";
 
-import { BannerConfig, defaultBannerConfig } from "@/utils/config";
-import {
-    createContext,
-    useContext,
-    useState,
-    useCallback,
-    useEffect,
-} from "react";
+import { createContext, useContext, ReactNode } from "react";
+import { useBannerStore } from "@/store/banner";
+import { BannerConfig } from "@/utils/config";
 
 interface BannerContextType {
     config: BannerConfig;
@@ -17,59 +12,22 @@ interface BannerContextType {
     addMemory: (imageUrl: string) => void;
     removeMemory: (imageUrl: string) => void;
     memoriesPerCycle: number;
+    setMemoriesPerCycle: (memoriesPerCycle: number) => void;
 }
 
 const BannerContext = createContext<BannerContextType | null>(null);
 
-export function BannerProvider({ children }: { children: React.ReactNode }) {
-    const [config, setConfig] = useState<BannerConfig>(defaultBannerConfig);
-    const [isFullScreen, setIsFullScreen] = useState(false);
-    const [memoriesPerCycle, setMemoriesPerCycle] = useState(
-        defaultBannerConfig.memoriesPerCycle
-    );
-
-    const updateConfig = useCallback((newConfig: Partial<BannerConfig>) => {
-        setConfig((prev) => ({ ...prev, ...newConfig }));
-    }, []);
-
-    const toggleFullScreen = useCallback(() => {
-        setIsFullScreen((prev) => !prev);
-    }, []);
-
-    const addMemory = useCallback((imageUrl: string) => {
-        setConfig((prev) => ({
-            ...prev,
-            memories: [...prev.memories, imageUrl],
-        }));
-    }, []);
-
-    const removeMemory = useCallback((imageUrl: string) => {
-        setConfig((prev) => ({
-            ...prev,
-            memories: prev.memories.filter((mem) => mem !== imageUrl),
-        }));
-    }, []);
-
-    useEffect(() => {
-        const loadMemories = async () => {
-            try {
-                const response = await fetch("/api/memories");
-                const data = await response.json();
-                if (data.imageUrls) {
-                    setConfig((prev) => ({
-                        ...prev,
-                        memories: data.imageUrls,
-                    }));
-                } else {
-                    console.error("Failed to load images:", data.error);
-                }
-            } catch (error) {
-                console.error("Failed to fetch images:", error);
-            }
-        };
-
-        loadMemories();
-    }, []);
+export function BannerProvider({ children }: { children: ReactNode }) {
+    const {
+        config,
+        isFullScreen,
+        updateConfig,
+        toggleFullScreen,
+        addMemory,
+        removeMemory,
+        memoriesPerCycle,
+        setMemoriesPerCycle,
+    } = useBannerStore();
 
     return (
         <BannerContext.Provider
@@ -81,15 +39,11 @@ export function BannerProvider({ children }: { children: React.ReactNode }) {
                 addMemory,
                 removeMemory,
                 memoriesPerCycle,
+                setMemoriesPerCycle,
             }}>
             {children}
         </BannerContext.Provider>
     );
 }
 
-export const useBanner = () => {
-    const context = useContext(BannerContext);
-    if (!context)
-        throw new Error("useBanner must be used within BannerProvider");
-    return context;
-};
+export const useBanner = () => useBannerStore();

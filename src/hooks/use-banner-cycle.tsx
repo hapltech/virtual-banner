@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BannerConfig } from "@/utils/config";
+import { useBannerStore } from "@/store/banner";
 
 function getRandomItems<T>(arr: T[], count: number): T[] {
     const shuffled = [...arr].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 }
 
-export const useBannerCycle = (config: BannerConfig) => {
+export const useBannerCycle = () => {
+    const { config, memoriesPerCycle } = useBannerStore();
     const [showingMemories, setShowingMemories] = useState(false);
     const [currentMemoryIndex, setCurrentMemoryIndex] = useState(0);
     const [currentMemories, setCurrentMemories] = useState<string[]>([]);
@@ -17,7 +18,7 @@ export const useBannerCycle = (config: BannerConfig) => {
         const cycleInterval = setInterval(() => {
             const randomMemories = getRandomItems(
                 config.memories,
-                Math.min(config.memoriesPerCycle, config.memories.length)
+                Math.min(memoriesPerCycle, config.memories.length)
             );
             setCurrentMemories(randomMemories);
             setShowingMemories(true);
@@ -37,7 +38,7 @@ export const useBannerCycle = (config: BannerConfig) => {
         config.cycleInterval,
         config.cycleDuration,
         config.memories,
-        config.memoriesPerCycle,
+        memoriesPerCycle,
     ]);
 
     useEffect(() => {
