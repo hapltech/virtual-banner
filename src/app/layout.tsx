@@ -17,8 +17,23 @@ export const metadata: Metadata = {
 const theme = mergeMantineTheme(
     DEFAULT_THEME,
     createTheme({
+        primaryColor: "festive-red",
         breakpoints,
-        colors,
+        colors: {
+            ...colors,
+            "festive-red": [
+                "#FFE5D9",
+                "#FFC2B3",
+                "#FFA08C",
+                "#FF7D66",
+                "#FF5A40",
+                "#E6371A",
+                "#CC1400",
+                "#B30000",
+                "#990000",
+                "#800000",
+            ],
+        },
     })
 );
 
